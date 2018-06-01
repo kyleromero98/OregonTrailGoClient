@@ -10,7 +10,11 @@ public class Globals {
     private Globals(){}
 
     public String getData(){
-        return "http://149.142.227.146:8080/";
+        // cade
+        //return "http://149.142.227.146:8080/";
+
+        // emulator
+        return "http://10.0.2.2:8080/";
     }
 
     public static synchronized Globals getInstance(){

@@ -27,11 +27,11 @@ public class Game extends AppCompatActivity {
     private Player client;
     private ServerUpdater updater;
     private CustomDialog dialog;
+    private GPSTracker gps;
 
     private BroadcastReceiver locationUpdateReceiver;
 
     final Handler handler = new Handler();
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +39,14 @@ public class Game extends AppCompatActivity {
 
         dialog = null;
 
+        gps = new GPSTracker(this);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             client = new Player(extras.getString("id"));
             //The key argument here must match that used in the other activity
+            client.setLon(gps.getLongitude());
+            client.setLat(gps.getLatitude());
         }
 
         TextView tv = (TextView) findViewById(R.id.user);

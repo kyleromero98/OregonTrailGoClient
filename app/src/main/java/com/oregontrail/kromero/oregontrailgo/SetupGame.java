@@ -109,9 +109,11 @@ public class SetupGame extends Activity {
             JSONObject location = new JSONObject();
             location.put("lat", gps.getLatitude());
             location.put("lon", gps.getLongitude());
+            Log.i("GREG LOCATION LAT", Double.toString(gps.getLatitude()));
+            Log.i("GREG LOCATION LONG", Double.toString(gps.getLongitude()));
 
             request.put("location", location);
-            Log.d("CADE", request.toString());
+            Log.d("SENT TO TARGET", request.toString());
             return request.toString();
         } catch (Exception e) {
             Log.d("KMR", "Can't format your JSON");

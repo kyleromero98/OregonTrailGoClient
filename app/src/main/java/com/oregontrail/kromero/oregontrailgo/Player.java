@@ -28,6 +28,8 @@ public class Player {
         water = 0;
         bullets = 0;
         supplies = 0;
+        lat = 0;
+        lon = 0;
     }
 
     public String getId() {
