@@ -114,7 +114,7 @@ public class ServerUpdater extends Thread {
 
     @Override
     public void run() {
-        while (client.isAlive()) {
+        while (true) {
             if (client.getEventId() == -1) {
                 getServerUpdate();
             } else {
@@ -126,7 +126,20 @@ public class ServerUpdater extends Thread {
             } catch (InterruptedException e) {
                 break;
             }
-            System.out.println("THREAD LOOPING");
+            if (!client.isAlive()) {
+                break;
+            }
+        }
+
+        // client is dead
+        while (true) {
+            getServerUpdate();
+            game.renderUI();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                break;
+            }
         }
     }
 }
