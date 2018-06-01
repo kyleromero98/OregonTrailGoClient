@@ -124,11 +124,6 @@ public class CustomDialog extends AppCompatDialogFragment {
                                         }
                                         return null;
                                     }
-
-                                    @Override
-                                    protected void onPostExecute(String s) {
-
-                                    }
                                 }.execute();
                         }
                     });
@@ -163,11 +158,6 @@ public class CustomDialog extends AppCompatDialogFragment {
                                         System.out.println(e.getMessage());
                                     }
                                     return null;
-                                }
-
-                                @Override
-                                protected void onPostExecute(String s) {
-
                                 }
                             }.execute();
                         }

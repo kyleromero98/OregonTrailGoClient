@@ -175,12 +175,13 @@ public class SetupGame extends Activity {
 
             if (conn.getResponseCode() == 200) {
                 Log.i("RESPONSE", "Successfully started game");
-                Intent intent = new Intent(SetupGame.this, Game.class);
-                intent.putExtra("id", clientId);
-                startActivity(intent);
             } else {
                 Log.i("RESPONSE", "Unsuccessfully started game");
             }
+
+            Intent intent = new Intent(SetupGame.this, Game.class);
+            intent.putExtra("id", clientId);
+            startActivity(intent);
 
             conn.disconnect();
         } catch (Exception e) {
