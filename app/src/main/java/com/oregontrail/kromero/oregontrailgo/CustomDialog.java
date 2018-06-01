@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
@@ -64,45 +65,71 @@ public class CustomDialog extends AppCompatDialogFragment {
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                Log.d("tag","TOP OF ONCLICK");
-                                URL url = new URL(negativeResponseAddress);
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                conn.setRequestMethod("GET");
+                            new AsyncTask<Void, Void, String>() {
 
+                                @Override
+                                protected String doInBackground(Void... voids) {
 
-                                String data = conn.getResponseMessage(); //error occurs in this call
-                                Log.i("DATA", data);
+                                    try {
+                                        URL url = new URL(negativeResponseAddress);
+                                        HttpURLConnection conn = null;
+                                        conn = (HttpURLConnection) url.openConnection();
+                                        conn.setRequestMethod("GET");
 
-                                Log.i("RESPONSE", "Successfully said no to event");
-                                client.clearEvent();
+                                        String data = conn.getResponseMessage();
+                                        Log.i("DATA", data);
 
-                                conn.disconnect();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                System.out.println(e.getMessage());
-                            }
+                                        Log.i("RESPONSE", "Successfully said no to event");
+                                        client.clearEvent();
+
+                                        conn.disconnect();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        System.out.println(e.getMessage());
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(String s) {
+
+                                }
+                            }.execute();
                         }
                     })
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                URL url = new URL(positiveResponseAddress);
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                conn.setRequestMethod("GET");
+                                new AsyncTask<Void, Void, String>() {
 
-                                String data = conn.getResponseMessage();
-                                Log.i("DATA", data);
+                                    @Override
+                                    protected String doInBackground(Void... voids) {
 
-                                Log.i("RESPONSE", "Successfully said yes to event");
-                                client.clearEvent();
+                                        try {
+                                            URL url = new URL(positiveResponseAddress);
+                                            HttpURLConnection conn = null;
+                                            conn = (HttpURLConnection) url.openConnection();
+                                            conn.setRequestMethod("GET");
 
-                                conn.disconnect();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                System.out.println(e.getMessage());
-                            }
+                                            String data = conn.getResponseMessage();
+                                            Log.i("DATA", data);
+
+                                            Log.i("RESPONSE", "Successfully said yes to event");
+                                            client.clearEvent();
+
+                                            conn.disconnect();
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                            System.out.println(e.getMessage());
+                                        }
+                                        return null;
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(String s) {
+
+                                    }
+                                }.execute();
                         }
                     });
         } else {
@@ -113,22 +140,36 @@ public class CustomDialog extends AppCompatDialogFragment {
                         public void onClick(DialogInterface dialog, int which) { // write this method.
                             //model it after the top two. should send false to allow the game to progress
                             // no timeout yet
-                            try {
-                                URL url = new URL(negativeResponseAddress);
-                                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                                conn.setRequestMethod("GET");
+                            new AsyncTask<Void, Void, String>() {
 
-                                String data = conn.getResponseMessage();
-                                Log.i("NOARG DATA", data);
+                                @Override
+                                protected String doInBackground(Void... voids) {
 
-                                Log.i("NOARG RESPONSE", "Successfully said no to event that did not offer me a dialogue choice");
-                                client.clearEvent();
+                                    try {
+                                        URL url = new URL(negativeResponseAddress);
+                                        HttpURLConnection conn = null;
+                                        conn = (HttpURLConnection) url.openConnection();
+                                        conn.setRequestMethod("GET");
 
-                                conn.disconnect();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                System.out.println(e.getMessage());
-                            }
+                                        String data = conn.getResponseMessage();
+                                        Log.i("DATA", data);
+
+                                        Log.i("RESPONSE", "Successfully said no to event with no choice");
+                                        client.clearEvent();
+
+                                        conn.disconnect();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        System.out.println(e.getMessage());
+                                    }
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(String s) {
+
+                                }
+                            }.execute();
                         }
                     });
         }

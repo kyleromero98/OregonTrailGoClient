@@ -1,6 +1,6 @@
 package com.oregontrail.kromero.oregontrailgo;
 
-public class Globals{
+public class Globals {
     private static Globals instance;
 
     // Global variable
