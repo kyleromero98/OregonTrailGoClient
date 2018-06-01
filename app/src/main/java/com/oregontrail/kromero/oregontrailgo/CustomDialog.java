@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -166,7 +164,7 @@ public class CustomDialog extends AppCompatDialogFragment {
         return builder.create();
     }
 
-    private static String getStringFromInputStream(InputStream is) {
+    private String getStringFromInputStream(InputStream is) {
         BufferedReader br = null;
         StringBuilder sb = new StringBuilder();
 

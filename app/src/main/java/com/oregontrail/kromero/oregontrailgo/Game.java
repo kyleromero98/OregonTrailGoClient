@@ -91,6 +91,7 @@ public class Game extends AppCompatActivity {
         @Override
         public void onServiceDisconnected(ComponentName className) {
             if (className.getClassName().equals("LocationService")) {
+                locationService.stopUpdatingLocation();
                 locationService = null;
             }
         }
