@@ -22,11 +22,9 @@ public class ServerUpdater extends Thread {
 
     private Game game;
     private Player client;
-    private GPSTracker tracker;
 
-    public ServerUpdater (Game game, Player client, GPSTracker tracker) {
+    public ServerUpdater (Game game, Player client) {
         this.client = client;
-        this.tracker = tracker;
         this.game = game;
     }
 

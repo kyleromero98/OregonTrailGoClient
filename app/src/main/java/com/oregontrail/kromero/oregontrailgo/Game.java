@@ -18,7 +18,6 @@ import android.widget.TextView;
 public class Game extends AppCompatActivity {
 
     private Player client;
-    private GPSTracker gps;
     private ServerUpdater updater;
     private CustomDialog dialog;
 
@@ -49,7 +48,7 @@ public class Game extends AppCompatActivity {
         this.getApplication().startService(serviceStart);
         this.getApplication().bindService(serviceStart,serviceConnection, Context.BIND_AUTO_CREATE);
 
-        updater = new ServerUpdater(this, client, gps);
+        updater = new ServerUpdater(this, client);
         updater.start();
     }
 
