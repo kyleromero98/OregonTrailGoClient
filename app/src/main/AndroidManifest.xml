@@ -4,8 +4,9 @@
     package="com.oregontrail.kromero.oregontrailgo">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+        tools:ignore="MockLocation,ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,6 +24,10 @@
         </activity>
         <activity android:name=".SetupGame"></activity>
         <activity android:name=".Game"></activity>
+
+        <service android:name=".LocationService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

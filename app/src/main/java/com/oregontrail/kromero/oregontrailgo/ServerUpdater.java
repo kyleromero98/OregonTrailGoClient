@@ -74,8 +74,8 @@ public class ServerUpdater extends Thread {
             request.put("id", client.getId());
 
             JSONObject location = new JSONObject();
-            location.put("lat", tracker.getLatitude());
-            location.put("lon", tracker.getLongitude());
+            location.put("lat", LocationService.getLat());
+            location.put("lon", LocationService.getLon());
 
             request.put("location", location);
 

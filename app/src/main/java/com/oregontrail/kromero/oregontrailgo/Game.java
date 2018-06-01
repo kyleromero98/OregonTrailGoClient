@@ -3,9 +3,14 @@ package com.oregontrail.kromero.oregontrailgo;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
@@ -16,6 +21,8 @@ public class Game extends AppCompatActivity {
     private GPSTracker gps;
     private ServerUpdater updater;
     private CustomDialog dialog;
+
+    public LocationService locationService;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +44,33 @@ public class Game extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
-        gps = new GPSTracker(this);
+
+        final Intent serviceStart = new Intent(this.getApplication(), LocationService.class);
+        this.getApplication().startService(serviceStart);
+        this.getApplication().bindService(serviceStart,serviceConnection, Context.BIND_AUTO_CREATE);
 
         updater = new ServerUpdater(this, client, gps);
         updater.start();
     }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            String name = className.getClassName();
+
+            if (name.endsWith("LocationService")) {
+                locationService = ((LocationService.LocationServiceBinder) service).getService();
+                locationService.startUpdatingLocation();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            if (className.getClassName().equals("LocationService")) {
+                locationService = null;
+            }
+        }
+    };
 
     public String getPromptMessage () {
         // construct the message that we want to prompt client with
