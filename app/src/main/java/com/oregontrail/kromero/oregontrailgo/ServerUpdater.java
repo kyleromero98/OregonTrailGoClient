@@ -23,10 +23,12 @@ public class ServerUpdater extends Thread {
 
     private Game game;
     private Player client;
+    private GPSTracker gps;
 
-    public ServerUpdater (Game game, Player client) {
+    public ServerUpdater (Game game, Player client, GPSTracker gps) {
         this.client = client;
         this.game = game;
+        this.gps = gps;
     }
 
     public String getServerUpdate() {
@@ -38,6 +40,9 @@ public class ServerUpdater extends Thread {
             conn.setRequestProperty("Accept", "application/json");
             conn.setDoOutput(true);
             conn.setDoInput(true);
+
+            client.setLat(gps.getLatitude());
+            client.setLon(gps.getLongitude());
 
             String update = getPlayerDataAsJson();
 

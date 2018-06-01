@@ -66,8 +66,8 @@ public class Game extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Location newLocation = intent.getParcelableExtra("location");
-                client.setLat(newLocation.getLatitude());
-                client.setLon(newLocation.getLongitude());
+                client.setLat(gps.getLatitude());
+                client.setLon(gps.getLongitude());
                 Log.i("LOCATION", "Updated client-side--Lat:" + client.getLat() + "---Lon:" + client.getLon());
             }
         };
@@ -76,7 +76,7 @@ public class Game extends AppCompatActivity {
                 locationUpdateReceiver,
                 new IntentFilter("LocationUpdated"));
 
-        updater = new ServerUpdater(this, client);
+        updater = new ServerUpdater(this, client, gps);
         updater.start();
     }
 

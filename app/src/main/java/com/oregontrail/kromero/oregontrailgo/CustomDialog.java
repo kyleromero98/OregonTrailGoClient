@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -34,6 +35,7 @@ public class CustomDialog extends AppCompatDialogFragment {
     private Game game;
     private Player client;
     private TextView messageText;
+    private ImageView messageIcon;
 
     @SuppressLint("ValidFragment")
     public CustomDialog(Game game, Player player) {
@@ -54,6 +56,28 @@ public class CustomDialog extends AppCompatDialogFragment {
 
         messageText = (TextView) view.findViewById(R.id.message);
         messageText.setText(game.getPromptMessage());
+
+        messageIcon = (ImageView) view.findViewById(R.id.message_icon);
+
+        switch (client.getEventId()) {
+            case 0:
+                messageIcon.setImageResource(R.drawable.dysentery);
+            case 1:
+                messageIcon.setImageResource(R.drawable.bandit);
+            case 2:
+                messageIcon.setImageResource(R.drawable.hunting);
+            case 3:
+                messageIcon.setImageResource(R.drawable.bad_water);
+            case 4:
+                messageIcon.setImageResource(R.drawable.broken_wheel);
+            case 5:
+                messageIcon.setImageResource(R.drawable.starve);
+            case 6:
+                messageIcon.setImageResource(R.drawable.town);
+            case 7:
+                messageIcon.setImageResource(R.drawable.dysentery);
+        }
+
 
         Log.d("tag","TOP OF ONCREATEDIALOGUE");
 
