@@ -72,8 +72,8 @@ public class ServerUpdater extends Thread {
             request.put("id", client.getId());
 
             JSONObject location = new JSONObject();
-            location.put("lat", LocationService.getLat());
-            location.put("lon", LocationService.getLon());
+            location.put("lat", client.getLat());
+            location.put("lon", client.getLon());
 
             request.put("location", location);
 
@@ -107,8 +107,6 @@ public class ServerUpdater extends Thread {
         }
         return sb.toString();
     }
-
-
 
     @Override
     public void run() {

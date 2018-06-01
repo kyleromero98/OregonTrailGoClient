@@ -8,6 +8,8 @@ import org.json.JSONObject;
 public class Player {
     private String id;
     private float percentComplete;
+    private double lat;
+    private double lon;
     private int eventId;
     private String eventRecipient;
     private boolean isAlive;
@@ -62,6 +64,18 @@ public class Player {
 
     public int getSupplies() {
         return supplies;
+    }
+
+    public double getLat () {return lat;}
+
+    public double getLon () {return lon;}
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public void setLon (double lon) {
+        this.lon = lon;
     }
 
     public String getEventLine() {

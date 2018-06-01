@@ -26,12 +26,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-//private final String regAddress = "http://10.0.2.2:8080/register";
-//private final String startAddress = "http://10.0.2.2:8080/start";
 
 public class SetupGame extends Activity {
     Globals addr = Globals.getInstance();
-    //addr.setData("");
     //cade's computer
     private final String regAddress = addr.getData() + "register";
     private final String startAddress = addr.getData() + "start";

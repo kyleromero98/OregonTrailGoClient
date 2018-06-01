@@ -1,36 +1,81 @@
 package com.oregontrail.kromero.oregontrailgo;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 public class LocationService extends Service implements LocationListener, GpsStatus.Listener{
 
-    public static double lat;
-    public static double lon;
 
     private final LocationServiceBinder binder = new LocationServiceBinder();
+    boolean isUpdatingLocation;
 
+    // just a placeholder constructor
     public LocationService() {
-        lat = 0;
-        lon = 0;
+
     }
 
-    public class LocationServiceBinder extends Binder {
-        public LocationService getService() {
-            return LocationService.this;
+    @Override
+    public void onCreate() {
+        isUpdatingLocation = false;
+    }
+
+    @SuppressLint("MissingPermission")
+    public void startUpdatingLocation() {
+        if (this.isUpdatingLocation) {
+            isUpdatingLocation = false;
+
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            try {
+                Criteria criteria = new Criteria();
+                criteria.setAccuracy(Criteria.ACCURACY_FINE);
+                criteria.setPowerRequirement(Criteria.POWER_HIGH);
+                criteria.setAltitudeRequired(false);
+                criteria.setSpeedRequired(false);
+                criteria.setCostAllowed(true);
+                criteria.setBearingRequired(false);
+
+                //API level 9 and up
+                criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+                criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+                Integer gpsFreqInMillis = 1000;
+                Integer gpsFreqInDistance = 1;  // in meters
+
+                locationManager.addGpsStatusListener(this);
+
+                locationManager.requestLocationUpdates(gpsFreqInMillis, gpsFreqInDistance, criteria, this, null);
+            } catch (IllegalArgumentException e) {
+                Log.e("LOCATION", e.getLocalizedMessage());
+                e.printStackTrace();
+            } catch (SecurityException e) {
+                Log.e("LOCATION", e.getLocalizedMessage());
+                e.printStackTrace();
+            } catch (RuntimeException e) {
+                Log.e("LOCATION", e.getLocalizedMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void stopUpdatingLocation(){
+        if(this.isUpdatingLocation == true){
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.removeUpdates(this);
+            isUpdatingLocation = false;
         }
     }
 
@@ -40,29 +85,62 @@ public class LocationService extends Service implements LocationListener, GpsSta
         return binder;
     }
 
-    @SuppressLint("MissingPermission")
-    public void startUpdatingLocation() {
-        LocationManager locationManager = (LocationManager)
-                getSystemService(LOCATION_SERVICE);
+    @Override
+    public void onRebind(Intent intent) {
+        Log.d("LOCATION", "onRebind ");
+    }
 
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setPowerRequirement(Criteria.POWER_HIGH);
-        criteria.setAltitudeRequired(false);
-        criteria.setSpeedRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setBearingRequired(false);
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d("LOCATION", "onUnbind");
+        return true;
+    }
 
-        //API level 9 and up
-        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+    @Override
+    public void onDestroy() {
+        Log.d("LOCATION", "onDestroy ");
+    }
 
-        Integer gpsFreqInMillis = 1000;
-        Integer gpsFreqInDistance = 1;  // in meters
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.d("LOCATION", "onTaskRemoved ");
+        this.stopUpdatingLocation();
 
-        locationManager.addGpsStatusListener(this);
+        stopSelf();
+    }
 
-        locationManager.requestLocationUpdates(gpsFreqInMillis, gpsFreqInDistance, criteria, this, null);
+    public class LocationServiceBinder extends Binder {
+        public LocationService getService() {
+            return LocationService.this;
+        }
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        if (provider.equals(LocationManager.GPS_PROVIDER)) {
+            notifyLocationProviderStatusUpdated(false);
+        }
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        if (provider.equals(LocationManager.GPS_PROVIDER)) {
+            notifyLocationProviderStatusUpdated(true);
+        }
+    }
+
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        if (provider.equals(LocationManager.GPS_PROVIDER)) {
+            if (status == LocationProvider.OUT_OF_SERVICE) {
+                notifyLocationProviderStatusUpdated(false);
+            } else {
+                notifyLocationProviderStatusUpdated(true);
+            }
+        }
+    }
+
+    private void notifyLocationProviderStatusUpdated(boolean isLocationProviderAvailable) {
+        //Broadcast location provider status change here
     }
 
     @Override
@@ -73,6 +151,8 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Override
     public void onLocationChanged(Location location) {
 
+        // this doesn't work for now
+        /*
         if(location.getAccuracy() <= 0){
             Log.d("LOCATION", "Latitidue and longitude values are invalid.");
             return;
@@ -83,34 +163,11 @@ public class LocationService extends Service implements LocationListener, GpsSta
         if(horizontalAccuracy > 10){ //10meter filter
             Log.d("LOCATION", "Accuracy is too low.");
             return;
-        }
+        }*/
 
-        lat = location.getLatitude();
-        lon = location.getLongitude();
-        Log.i("LAT", Double.toString(lat));
-        Log.i("LON", Double.toString(lon));
-    }
+        Intent intent = new Intent("LocationUpdated");
+        intent.putExtra("location", location);
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    public static double getLat () {
-        return lat;
-    }
-
-    public static double getLon () {
-        return lon;
+        LocalBroadcastManager.getInstance(this.getApplication()).sendBroadcast(intent);
     }
 }

@@ -1,27 +1,37 @@
 package com.oregontrail.kromero.oregontrailgo;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 public class Game extends AppCompatActivity {
+
+    // stores the client and server updater information
+    public LocationService locationService;
 
     private Player client;
     private ServerUpdater updater;
     private CustomDialog dialog;
 
-    public LocationService locationService;
+    private BroadcastReceiver locationUpdateReceiver;
+
+    final Handler handler = new Handler();
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +54,28 @@ public class Game extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
 
-        final Intent serviceStart = new Intent(this.getApplication(), LocationService.class);
-        this.getApplication().startService(serviceStart);
-        this.getApplication().bindService(serviceStart,serviceConnection, Context.BIND_AUTO_CREATE);
+        final Intent locationService = new Intent(this.getApplication(), LocationService.class);
+        this.getApplication().startService(locationService);
+        this.getApplication().bindService(locationService, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        locationUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Location newLocation = intent.getParcelableExtra("location");
+                client.setLat(newLocation.getLatitude());
+                client.setLon(newLocation.getLongitude());
+                Log.i("LOCATION", "Updated client-side--Lat:" + client.getLat() + "---Lon:" + client.getLon());
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                locationUpdateReceiver,
+                new IntentFilter("LocationUpdated"));
 
         updater = new ServerUpdater(this, client);
         updater.start();
     }
+
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
