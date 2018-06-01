@@ -37,7 +37,7 @@ public class LocationService extends Service implements LocationListener, GpsSta
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @SuppressLint("MissingPermission")
