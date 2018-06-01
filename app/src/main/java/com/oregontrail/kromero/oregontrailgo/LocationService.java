@@ -72,6 +72,19 @@ public class LocationService extends Service implements LocationListener, GpsSta
 
     @Override
     public void onLocationChanged(Location location) {
+
+        if(location.getAccuracy() <= 0){
+            Log.d("LOCATION", "Latitidue and longitude values are invalid.");
+            return;
+        }
+
+        //setAccuracy(newLocation.getAccuracy());
+        float horizontalAccuracy = location.getAccuracy();
+        if(horizontalAccuracy > 10){ //10meter filter
+            Log.d("LOCATION", "Accuracy is too low.");
+            return;
+        }
+
         lat = location.getLatitude();
         lon = location.getLongitude();
         Log.i("LAT", Double.toString(lat));
