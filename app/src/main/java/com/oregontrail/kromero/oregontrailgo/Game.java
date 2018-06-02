@@ -30,6 +30,8 @@ public class Game extends AppCompatActivity {
     private CustomDialog dialog;
     private GPSTracker gps;
 
+    private ProgressBar progressBar;
+
     private BroadcastReceiver locationUpdateReceiver;
 
     final Handler handler = new Handler();
@@ -54,6 +56,8 @@ public class Game extends AppCompatActivity {
         Typeface tf = Typeface.createFromAsset(tv.getContext().getAssets(), "fonts/font.ttf");
         tv.setTypeface(tf);
         tv.setText(client.getId());
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -147,5 +151,6 @@ public class Game extends AppCompatActivity {
         bullets.setText(Integer.toString(client.getBullets()));
         progressBar.setProgress(Math.round(client.getPercentComplete()));
         Log.i("PROGRESS", Integer.toString(client.getPercentComplete()));
+
     }
 }
