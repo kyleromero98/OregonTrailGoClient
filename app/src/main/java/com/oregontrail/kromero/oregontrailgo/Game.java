@@ -28,11 +28,13 @@ public class Game extends AppCompatActivity {
     private Player client;
     private ServerUpdater updater;
     private CustomDialog dialog;
+    private ResponseDialog responseDialog;
     private GPSTracker gps;
 
-    private ProgressBar progressBar;
-
     private BroadcastReceiver locationUpdateReceiver;
+    private BroadcastReceiver responseReceiver;
+
+    private String serverResponse;
 
     final Handler handler = new Handler();
 
@@ -57,8 +59,6 @@ public class Game extends AppCompatActivity {
         tv.setTypeface(tf);
         tv.setText(client.getId());
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
@@ -77,9 +77,25 @@ public class Game extends AppCompatActivity {
             }
         };
 
+        responseReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String response = intent.getParcelableExtra("response");
+
+                android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                if (prev == null) {
+                    openDialog();
+                }
+            }
+        };
+
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 locationUpdateReceiver,
                 new IntentFilter("LocationUpdated"));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                responseReceiver,
+                new IntentFilter("ResponseUpdated"));
 
         updater = new ServerUpdater(this, client, gps);
         updater.start();
@@ -128,13 +144,18 @@ public class Game extends AppCompatActivity {
     public void handleEvent () {
         android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev == null) {
-            openDialog();
+            openResponseDialog();
         }
     }
 
     public void openDialog() {
         dialog = new CustomDialog(this, client);
         dialog.show(getSupportFragmentManager(), "dialog");
+    }
+
+    public void openResponseDialog() {
+        responseDialog = new ResponseDialog(this, client, serverResponse);
+        responseDialog.show(getSupportFragmentManager(), "dialog");
     }
 
     public void renderUI () {
@@ -149,8 +170,19 @@ public class Game extends AppCompatActivity {
         water.setText(Integer.toString(client.getWater()));
         supplies.setText(Integer.toString(client.getSupplies()));
         bullets.setText(Integer.toString(client.getBullets()));
+
         progressBar.setProgress(Math.round(client.getPercentComplete()));
+
         Log.i("PROGRESS", Integer.toString(client.getPercentComplete()));
 
+        if (client.isAlive() == false && client.getEventId() == -1) {
+            Intent intent = new Intent(this, LoseScreen.class);
+            startActivity(intent);
+        }
+
+        if (client.getPercentComplete() >= 100.0 && client.getEventId() == -1) {
+            Intent intent = new Intent(this, WinScreen.class);
+            startActivity(intent);
+        }
     }
 }

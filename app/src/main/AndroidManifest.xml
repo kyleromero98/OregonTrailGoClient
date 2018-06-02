@@ -4,7 +4,8 @@
     package="com.oregontrail.kromero.oregontrailgo">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+    <uses-permission
+        android:name="android.permission.ACCESS_MOCK_LOCATION"
         tools:ignore="MockLocation,ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -22,12 +23,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SetupGame"></activity>
-        <activity android:name=".Game"></activity>
+        <activity android:name=".SetupGame" />
+        <activity android:name=".Game" />
 
-        <service android:name=".LocationService"
+        <service
+            android:name=".LocationService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".LoseScreen" />
+        <activity android:name=".WinScreen"></activity>
     </application>
 
 </manifest>

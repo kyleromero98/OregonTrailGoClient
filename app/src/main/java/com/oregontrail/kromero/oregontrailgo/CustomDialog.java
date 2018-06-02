@@ -4,8 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,8 +103,12 @@ public class CustomDialog extends AppCompatDialogFragment {
                                         String data = conn.getResponseMessage();
                                         Log.i("DATA", data);
 
+                                        Intent intent = new Intent("LocationUpdated");
+                                        intent.putExtra("location", data);
+
+                                        LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
+
                                         Log.i("RESPONSE", "Successfully said no to event");
-                                        client.clearEvent();
 
                                         conn.disconnect();
                                     } catch (IOException e) {
