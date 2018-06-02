@@ -43,6 +43,7 @@ public class Game extends AppCompatActivity {
         setContentView(R.layout.game);
 
         dialog = null;
+        serverResponse = "";
 
         gps = new GPSTracker(this);
 
@@ -80,11 +81,11 @@ public class Game extends AppCompatActivity {
         responseReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String response = intent.getParcelableExtra("response");
+                serverResponse = intent.getExtras().getString("response");
 
-                android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("responseDialog");
                 if (prev == null) {
-                    openDialog();
+                    openResponseDialog();
                 }
             }
         };
@@ -101,6 +102,9 @@ public class Game extends AppCompatActivity {
         updater.start();
     }
 
+    public void onReceive(Context context, Intent intent) {
+        Log.i("RECEIVED BROADCAST", "Received broadcast");
+    }
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -143,8 +147,9 @@ public class Game extends AppCompatActivity {
 
     public void handleEvent () {
         android.support.v4.app.Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-        if (prev == null) {
-            openResponseDialog();
+        android.support.v4.app.Fragment response = getSupportFragmentManager().findFragmentByTag("responseDialog");
+        if (prev == null && response == null) {
+            openDialog();
         }
     }
 
@@ -155,7 +160,7 @@ public class Game extends AppCompatActivity {
 
     public void openResponseDialog() {
         responseDialog = new ResponseDialog(this, client, serverResponse);
-        responseDialog.show(getSupportFragmentManager(), "dialog");
+        responseDialog.show(getSupportFragmentManager(), "responseDialog");
     }
 
     public void renderUI () {

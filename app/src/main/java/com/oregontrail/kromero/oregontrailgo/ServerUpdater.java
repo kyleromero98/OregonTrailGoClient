@@ -112,10 +112,10 @@ public class ServerUpdater extends Thread {
             }
         }
 
+        game.renderUI();
         // client is dead
         while (true) {
             getServerUpdate();
-            game.renderUI();
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
