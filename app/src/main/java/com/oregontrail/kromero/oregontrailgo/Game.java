@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class Game extends AppCompatActivity {
@@ -137,10 +138,14 @@ public class Game extends AppCompatActivity {
         TextView water = (TextView) findViewById(R.id.water);
         TextView supplies = (TextView) findViewById(R.id.supplies);
         TextView bullets = (TextView) findViewById(R.id.bullets);
+        ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
 
         food.setText(Integer.toString(client.getFood()));
         water.setText(Integer.toString(client.getWater()));
         supplies.setText(Integer.toString(client.getSupplies()));
         bullets.setText(Integer.toString(client.getBullets()));
+        progressBar.setProgress(Math.round(client.getPercentComplete()));
+        Log.i("PROGRESS", Integer.toString(client.getPercentComplete()));
     }
 }

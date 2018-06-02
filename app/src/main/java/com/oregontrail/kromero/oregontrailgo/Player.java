@@ -42,8 +42,8 @@ public class Player {
         return id;
     }
 
-    public float getPercentComplete () {
-        return percentComplete;
+    public int getPercentComplete () {
+        return (int) (100 * percentComplete);
     }
 
     public int getEventId () {
