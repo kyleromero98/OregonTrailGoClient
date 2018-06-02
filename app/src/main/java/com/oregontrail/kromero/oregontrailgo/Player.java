@@ -4,6 +4,8 @@ import android.util.JsonReader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.Context;
+import android.util.Log;
 
 public class Player {
     private String id;
@@ -17,9 +19,12 @@ public class Player {
     private int water;
     private int bullets;
     private int supplies;
+    private Context context;
+    private GPSTracker gps;
 
-    public Player (String id) {
+    public Player (String id, Context context) {
         this.id = id;
+        this.context = context;
         percentComplete = 0;
         eventId = -1;
         eventRecipient = "";
@@ -30,6 +35,7 @@ public class Player {
         supplies = 0;
         lat = 0;
         lon = 0;
+        this.gps = new GPSTracker(this.context);
     }
 
     public String getId() {
@@ -68,9 +74,30 @@ public class Player {
         return supplies;
     }
 
-    public double getLat () {return lat;}
+    public double getLat () {
+        //return lat;
+        if (gps.canGetLocation()) {
+            //GPSTracker ggg = new GPSTracker(this.context);
+            gps.getLocation();
+            Log.i("TEST", "here is a lat " + Double.toString(gps.getLatitude()));
+            return gps.getLatitude();
+        } else {
+          gps.showSettingsAlert();
+        }
+        return 11.11;
+    }
 
-    public double getLon () {return lon;}
+    public double getLon () {
+        //return lon;
+        if (gps.canGetLocation()) {
+            //GPSTracker ggg = new GPSTracker(this.context);
+            gps.getLocation();
+            return gps.getLongitude();
+        } else {
+            gps.showSettingsAlert();
+        }
+        return 11.11;
+    }
 
     public void setLat(double lat) {
         this.lat = lat;

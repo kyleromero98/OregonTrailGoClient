@@ -43,7 +43,7 @@ public class Game extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            client = new Player(extras.getString("id"));
+            client = new Player(extras.getString("id"), this);
             //The key argument here must match that used in the other activity
             client.setLon(gps.getLongitude());
             client.setLat(gps.getLatitude());

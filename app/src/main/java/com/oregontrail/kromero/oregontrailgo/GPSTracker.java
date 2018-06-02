@@ -82,7 +82,7 @@ public class GPSTracker extends Service implements LocationListener {
                 }
                 // if GPS Enabled get lat/long using GPS Services
                 if (isGPSEnabled) {
-                    if (location == null) {
+                    //if (location == null) {//
                         //Log.d("dave", "GPS works");
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
@@ -98,7 +98,7 @@ public class GPSTracker extends Service implements LocationListener {
                                 longitude = location.getLongitude();
                             }
                         }
-                    }
+                    //}//
                 } else {
                     Log.d("dave", "GPS not enabled");
                 }
