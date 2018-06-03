@@ -11,7 +11,7 @@ public class Globals {
 
     public String getData(){
         // cade
-        return "http://192.168.43.126:8080/";
+        return "http://169.232.245.97:8080/";
 
         // emulator
         //return "http://10.0.2.2:8080/";

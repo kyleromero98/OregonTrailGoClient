@@ -102,10 +102,6 @@ public class Game extends AppCompatActivity {
         updater.start();
     }
 
-    public void onReceive(Context context, Intent intent) {
-        Log.i("RECEIVED BROADCAST", "Received broadcast");
-    }
-
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {

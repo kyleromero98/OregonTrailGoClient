@@ -107,24 +107,35 @@ public class CustomDialog extends AppCompatDialogFragment {
                                         conn = (HttpURLConnection) url.openConnection();
                                         conn.setRequestMethod("GET");
 
-                                        String data = null;
+                                        if (conn.getResponseCode() == 200) {
+                                            String data = getStringFromInputStream(conn.getInputStream());
+                                            if (data != null || (data.length() >= 2)) {
+                                                try {
+                                                    JSONObject jsonObj = new JSONObject(data);
+                                                    data = jsonObj.getString("message");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    System.out.println("The player got an f'ed up JSON string");
+                                                }
+                                                Log.i("STRING LENGTH", Integer.toString(data.length()));
+                                                if (data != null || (data.length() >= 2)) {
+                                                    Log.i("DATA", data);
 
-                                        try {
-                                            JSONObject jsonObj = new JSONObject(getStringFromInputStream(conn.getInputStream()));
-                                            data = jsonObj.getString("message");
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            System.out.println("The player got an f'ed up JSON string");
+                                                    Intent intent = new Intent("ResponseUpdated");
+                                                    intent.putExtra("response", data);
+
+                                                    LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
+
+                                                    Log.i("RESPONSE", "Successfully said no to event");
+                                                } else {
+                                                    client.clearEvent();
+                                                }
+                                            } else {
+                                                client.clearEvent();
+                                            }
+                                        } else {
+                                            client.clearEvent();
                                         }
-                                        Log.i("DATA", data);
-
-                                        Intent intent = new Intent("ResponseUpdated");
-                                        intent.putExtra("response", data);
-
-                                        LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
-
-                                        Log.i("RESPONSE", "Successfully said no to event");
-
                                         conn.disconnect();
                                     } catch (IOException e) {
                                         e.printStackTrace();
@@ -154,24 +165,29 @@ public class CustomDialog extends AppCompatDialogFragment {
                                             conn = (HttpURLConnection) url.openConnection();
                                             conn.setRequestMethod("GET");
 
-                                            String data = null;
+                                            if (conn.getResponseCode() == 200) {
+                                                String data = getStringFromInputStream(conn.getInputStream());
+                                                try {
+                                                    JSONObject jsonObj = new JSONObject(data);
+                                                    data = jsonObj.getString("message");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    System.out.println("The player got an f'ed up JSON string");
+                                                }
+                                                if (data.length() >= 2) {
+                                                    Log.i("DATA", data);
 
-                                            try {
-                                            JSONObject jsonObj = new JSONObject(getStringFromInputStream(conn.getInputStream()));
-                                            data = jsonObj.getString("message");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                                System.out.println("The player got an f'ed up JSON string");
+                                                    Log.i("RESPONSE", "Successfully said yes to event");
+                                                    Intent intent = new Intent("ResponseUpdated");
+                                                    intent.putExtra("response", data);
+
+                                                    LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
+                                                } else {
+                                                    client.clearEvent();
+                                                }
+                                            } else {
+                                                client.clearEvent();
                                             }
-
-                                            Log.i("DATA", data);
-
-                                            Log.i("RESPONSE", "Successfully said yes to event");
-                                            Intent intent = new Intent("ResponseUpdated");
-                                            intent.putExtra("response", data);
-
-                                            LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
-
                                             conn.disconnect();
                                         } catch (IOException e) {
                                             e.printStackTrace();
@@ -201,25 +217,34 @@ public class CustomDialog extends AppCompatDialogFragment {
                                         conn = (HttpURLConnection) url.openConnection();
                                         conn.setRequestMethod("GET");
 
-                                        String data = null;
+                                        if (conn.getResponseCode() == 200) {
+                                            String data = getStringFromInputStream(conn.getInputStream());
+                                            if (data != null || (data.length() >= 2)) {
+                                                try {
+                                                    JSONObject jsonObj = new JSONObject(data);
+                                                    data = jsonObj.getString("message");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    System.out.println("The player got an f'ed up JSON string");
+                                                }
+                                                if (data != null || data.length() >= 2) {
+                                                    Log.i("DATA", data);
 
-                                        try {
-                                            JSONObject jsonObj = new JSONObject(getStringFromInputStream(conn.getInputStream()));
-                                            data = jsonObj.getString("message");
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            System.out.println("The player got an f'ed up JSON string");
+                                                    Log.i("RESPONSE", "Successfully said no to event with no choice");
+
+                                                    Intent intent = new Intent("ResponseUpdated");
+                                                    intent.putExtra("response", data);
+
+                                                    LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
+                                                } else {
+                                                    client.clearEvent();
+                                                }
+                                            } else {
+                                                client.clearEvent();
+                                            }
+                                        } else {
+                                            client.clearEvent();
                                         }
-
-                                        Log.i("DATA", data);
-
-                                        Log.i("RESPONSE", "Successfully said no to event with no choice");
-
-                                        Intent intent = new Intent("ResponseUpdated");
-                                        intent.putExtra("response", data);
-
-                                        LocalBroadcastManager.getInstance(game.getApplication()).sendBroadcast(intent);
-
                                         conn.disconnect();
                                     } catch (IOException e) {
                                         e.printStackTrace();
