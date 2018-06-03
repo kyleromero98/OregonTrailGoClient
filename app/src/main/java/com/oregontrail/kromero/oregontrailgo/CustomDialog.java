@@ -212,7 +212,7 @@ public class CustomDialog extends AppCompatDialogFragment {
                                 protected String doInBackground(Void... voids) {
 
                                     try {
-                                        URL url = new URL(negativeResponseAddress);
+                                        URL url = new URL(positiveResponseAddress);
                                         HttpURLConnection conn = null;
                                         conn = (HttpURLConnection) url.openConnection();
                                         conn.setRequestMethod("GET");
