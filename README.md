@@ -7,8 +7,7 @@ This is an Android Studio project that contains our code for our CS M117 final p
 1) Download and install Android Studio Version 3.1.2
 
 2) Download the client and server portions our game from the following GitHub Repos
-https://github.com/kyleromero98/OregonTrailGoClient
-
+https://github.com/kyleromero98/OregonTrailGoClient\
 https://github.com/amit-mondal/OregonTrail
 
 3) Open a terminal window inside of go/src/server
